@@ -148,6 +148,23 @@ Future<String> fetchBroken() async {
   throw Exception('Server down');
 }
 
+// Bonus B1: Group every title under each of its tags.
+Map<String, List<String>> groupTitlesByTag() {
+  final grouped = <String, List<String>>{};
+  for (final book in books) {
+    final title = book['title'] as String;
+    for (final tag in book['tags'] as List<String>) {
+      grouped.putIfAbsent(tag, () => <String>[]).add(title);
+    }
+  }
+  return grouped;
+}
+
+// Bonus B2: A reusable, type-safe filter function.
+List<T> filterBy<T>(List<T> items, bool Function(T) test) {
+  return items.where(test).toList();
+}
+
 Future<void> main() async {
   part1();
   part2();
@@ -155,6 +172,7 @@ Future<void> main() async {
   part4();
   part5();
   await part6();
+  await bonus();
 }
 
 void part1() {
@@ -172,9 +190,11 @@ void part2() {
   print('--- Part 2 ---');
 
   final titles = ['Dart in Action', 'Clean Code'];
-  print(transformAll(titles, (String s) {
-    return s.toUpperCase();
-  }));
+  print(
+    transformAll(titles, (String s) {
+      return s.toUpperCase();
+    }),
+  );
   print(transformAll(titles, (s) => '$s!'));
 
   final desk1 = makeCounter();
@@ -210,7 +230,9 @@ void part3() {
   print('Total copies: $totalCopies');
 
   final years = books.map((book) => book['year'] as int).toList();
-  final oldest = years.reduce((first, second) => first < second ? first : second);
+  final oldest = years.reduce(
+    (first, second) => first < second ? first : second,
+  );
   print('Oldest year: $oldest');
 
   final sortedBooks = List.of(books);
@@ -293,6 +315,29 @@ Future<void> part6() async {
   } catch (e) {
     print('Fetch failed: $e');
   }
+}
+
+Future<void> bonus() async {
+  print('--- Bonus ---');
+
+  // B1: Tag to titles mapping.
+  print('Titles by tag: ${groupTitlesByTag()}');
+
+  // B2: Repeat the available-books query using the generic filter.
+  final availableBooks = filterBy(books, (book) => (book['copies'] as int) > 0);
+  final availableTitles = availableBooks
+      .map((book) => book['title'] as String)
+      .toList();
+  print('Available with filterBy: $availableTitles');
+
+  // B3: Start both Futures before waiting for them together.
+  final timer = Stopwatch()..start();
+  final firstFetch = fetchBookOfTheDay();
+  final secondFetch = fetchBookOfTheDay();
+  final results = await Future.wait([firstFetch, secondFetch]);
+  timer.stop();
+  print('Parallel fetch results: $results');
+  print('Parallel fetch time: ${timer.elapsedMilliseconds} ms');
 }
 
 // Reflection

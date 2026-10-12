@@ -35,15 +35,33 @@ class LibraryItem {
   final String title;
   final int year;
   LibraryItem(this.title, this.year);
+
+  String describe() => '$title ($year)';
 }
 
 class Book extends LibraryItem {
   final int pages;
   Book(super.title, super.year, this.pages);
+
+  @override
+  String describe() => '${super.describe()}, $pages pages';
 }
 
 Book mainBook() {
   return Book(titles[u], yearOf(u), 100 + 3 * seed);
+}
+
+class Magazine extends LibraryItem {
+  final int issue;
+  Magazine(super.title, super.year, this.issue);
+
+  @override
+  String describe() => '${super.describe()}, issue $issue';
+}
+
+Magazine mainMagazine() {
+  var i = (u + 1) % 10;
+  return Magazine(titles[i], yearOf(i), 1 + (t + u) % 12);
 }
 
 void main() {
@@ -79,6 +97,15 @@ void step1() {
 
 void step2() {
   print('--- Step 2 ---');
+
+  print('Step 2: ${mainBook().describe()}');
+  print('Step 2: ${mainMagazine().describe()}');
+
+  // Think: without @override, mistyping descibe() would create a brand
+  // new, separate method on Book — Dart would not complain, because it
+  // looks like a valid new method name. Calling book.describe() would
+  // then just run LibraryItem's original version (no pages shown),
+  // and the mistyped descibe() would silently sit there unused.
 }
 
 void step3() {

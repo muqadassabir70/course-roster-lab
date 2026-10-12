@@ -273,7 +273,6 @@ void step4() {
   print('Step 4: after borrow? ${book.isAvailable}');
   book.giveBack();
   print('Step 4: after return? ${book.isAvailable}');
-
   List<LibraryItem> items = [book, mainMagazine(), mainDvd()];
   for (var item in items) {
     print('Step 4: ${item.runtimeType} borrowable? ${item is Borrowable}');

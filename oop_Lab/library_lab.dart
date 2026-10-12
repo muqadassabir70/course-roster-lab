@@ -3,7 +3,6 @@
 
 const String rollNo = '04072313021';
 
-// ===== Seeded settings (generated from YOUR roll number). Do not edit. =====
 final int seed = int.parse(rollNo.substring(rollNo.length - 2));
 final int t = seed ~/ 10;
 final int u = seed % 10;
@@ -260,7 +259,6 @@ void step3() {
     'Step 3: Dvd late fee for $daysLate days = '
     '${mainDvd().lateFee(daysLate)}',
   );
-
   // Think: LibraryItem cannot be instantiated directly because it is
   // abstract and lateFee has no implementation. Concrete subclasses
   // must provide the missing method.

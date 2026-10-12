@@ -1,11 +1,19 @@
-# OOP Lab Answers
-Name: MUQADAS
-Roll no: 04072313021
+# Campus Library System Lab — Reflection Answers
 
-Q1. A subclass using `extends` gets real, working code and fields for free from the parent — it can reuse them directly. A class using `implements` only copies the API shape; it must write every method itself from scratch.
+**Name:** Muqadas Sabir  
+**Roll Number:** 04072313021
 
-Q2. A mixin fits when unrelated classes (like Book and Dvd here) need to share the exact same ready-made behaviour, without an is-a relationship. An abstract parent class fits when the classes genuinely are the same kind of thing and share both structure and a contract they must each fulfill.
+### Q1. What can a subclass using extends use for free that a class using implements has to write itself?
 
-Q3. Dart's Set and Map use hashCode to quickly find which "bucket" an object belongs to, then use == to confirm a match. If two objects are == but have different hashCode values, they can land in different buckets and never get compared, so sets/maps would behave incorrectly (duplicates not detected, lookups failing).
+A subclass using `extends` inherits the parent's implemented methods, fields, and behaviour, so it only needs to add or override what is necessary. A class using `implements` inherits no implementation from the interface and must implement all its required members itself.
 
-Q4. An extension method adds new behaviour without creating a new type — the object is still exactly a String. A subclass of String is not allowed because String (like several core Dart types) is marked as a type that cannot be extended, to keep its behaviour predictable and efficient; extensions were designed as the safe way to add functionality instead.
+### Q2. Book and Dvd both use Renewable. When would you pick a mixin, and when an abstract parent class?
+I would use a mixin when unrelated classes need to share reusable behaviour, such as the renewal functionality of Book and Dvd. I would use an abstract parent class when the classes share a common identity, fields, or base behaviour, such as LibraryItem.
+
+### Q3. Why must you override hashCode whenever you override ==?
+
+When two objects are equal according to `==`, they must return the same `hashCode`. Sets and maps rely on this rule to identify equal objects correctly and avoid storing duplicate keys or values.
+
+### Q4. An extension method on String and a subclass of String both add behaviour. Why does Dart let you write the first one but not the second?
+
+Dart extension methods add convenience methods to an existing type without changing or inheriting from its implementation. Dart does not allow extending `String` because it is a final type, so extensions provide a way to add helper functionality without subclassing it.

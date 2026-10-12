@@ -348,7 +348,6 @@ void step8() {
 
 void step9() {
   print('--- Step 9 ---');
-
   LibraryItem.created = 0;
   buildShelf();
   var shelf = buildShelf();

@@ -3,6 +3,7 @@
 **Name:** Muqadas Sabir  
 **Roll Number:** 04072313021
 
+
 ### Q1. What can a subclass using extends use for free that a class using implements has to write itself?
 
 A subclass using `extends` inherits the parent's implemented methods, fields, and behaviour, so it only needs to add or override what is necessary. A class using `implements` inherits no implementation from the interface and must implement all its required members itself.

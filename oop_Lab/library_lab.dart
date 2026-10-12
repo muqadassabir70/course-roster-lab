@@ -333,7 +333,6 @@ void step7() {
 
 void step8() {
   print('--- Step 8 ---');
-
   var f1 = Fine(mainBook().lateFee(daysLate));
   var f2 = Fine(mainMagazine().lateFee(daysLate));
 

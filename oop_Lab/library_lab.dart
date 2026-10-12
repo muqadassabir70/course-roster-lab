@@ -318,7 +318,6 @@ void step7() {
 
   var discounted = MemberType.values[seed % 3]
       .applyDiscount(mainBook().lateFee(daysLate));
-
   print('Step 7: ${discounted.rs}');
   print('Step 7: initials of "${titles[u]}" = ${titles[u].initials}');
 

@@ -370,7 +370,6 @@ void step9() {
 
 void step10() {
   print('--- Step 10 ---');
-
   var shelf = buildShelf();
   var member = Member('S$seed', MemberType.values[seed % 3]);
 

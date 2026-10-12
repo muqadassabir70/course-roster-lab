@@ -292,7 +292,6 @@ void step5() {
   for (var attempt = 0; attempt < renewAttempts; attempt++) {
     if (book.renew(renewLimit)) ok++;
   }
-
   print('Step 5: renewed $ok of $renewAttempts attempts (limit $renewLimit)');
   print('Step 5: renew once more? ${book.renew(renewLimit)}');
   print('Step 5: dvd can renew too? ${mainDvd().renew(1)}');

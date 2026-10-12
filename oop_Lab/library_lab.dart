@@ -313,7 +313,6 @@ void step6() {
   // Think: an enum is safer than a String because its values are fixed
   // and compiler-checked. A misspelled enum value causes a compile error.
 }
-
 void step7() {
   print('--- Step 7 ---');
 

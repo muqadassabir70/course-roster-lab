@@ -1,5 +1,4 @@
 
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 
@@ -41,10 +40,7 @@ class LabApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Study Tracker',
-      home: HomePage(),
-    );
+    return const MaterialApp(title: 'Study Tracker', home: HomePage());
   }
 }
 
@@ -59,37 +55,26 @@ class HomePage extends StatelessWidget {
     // SingleChildScrollView -> Column -> Row -> Text('Max: ..').
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Study Tracker: $course'),
-      ),
+      appBar: AppBar(title: Text('Study Tracker: $course')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StudentCard(
-              name: studentName,
-              roll: rollNo,
-              course: course,
-            ),
+            StudentCard(name: studentName, roll: rollNo, course: course),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Start: $startCount',
-                  key: const Key('info-start'),
-                ),
-                Text(
-                  'Step: $stepSize',
-                  key: const Key('info-step'),
-                ),
-                Text(
-                  'Max: $maxCount',
-                  key: const Key('info-max'),
-                ),
+                Text('Start: $startCount', key: const Key('info-start')),
+                Text('Step: $stepSize', key: const Key('info-step')),
+                Text('Max: $maxCount', key: const Key('info-max')),
               ],
             ),
+
+            // STEP 4: Display the progress below the information row.
+            const SizedBox(height: 12),
+            GoalBanner(count: startCount, max: maxCount),
           ],
         ),
       ),
@@ -120,21 +105,34 @@ class StudentCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Name: $name',
-              key: const Key('student-name'),
-            ),
-            Text(
-              'Roll no: $roll',
-              key: const Key('student-roll'),
-            ),
-            Text(
-              'Course: $course',
-              key: const Key('student-course'),
-            ),
+            Text('Name: $name', key: const Key('student-name')),
+            Text('Roll no: $roll', key: const Key('student-roll')),
+            Text('Course: $course', key: const Key('student-course')),
           ],
         ),
       ),
+    );
+  }
+}
+
+// STEP 4: GoalBanner
+// Stateless
+// It receives count and max and calculates the progress without storing changing state.
+// Think: GoalBanner does not need setState because it does not own changing
+// state. To show a new count, its parent would rebuild it with a new count.
+class GoalBanner extends StatelessWidget {
+  final int count;
+  final int max;
+
+  const GoalBanner({super.key, required this.count, required this.max});
+
+  @override
+  Widget build(BuildContext context) {
+    final percent = count * 100 ~/ max;
+
+    return Text(
+      'Progress: $count of $max ($percent%)',
+      key: const Key('progress'),
     );
   }
 }
@@ -154,10 +152,7 @@ class _BuggyCounterState extends State<BuggyCounter> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          'Bug clicks: $_clicks',
-          key: const Key('bug-text'),
-        ),
+        Text('Bug clicks: $_clicks', key: const Key('bug-text')),
         const SizedBox(width: 12),
         ElevatedButton(
           key: const Key('bug-button'),

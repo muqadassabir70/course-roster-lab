@@ -1,4 +1,4 @@
-// main.dart - Study Tracker lab
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -8,28 +8,34 @@ const String rollNo = '04072313021';
 
 // ===== Seeded settings (generated from YOUR roll number). Do not edit. =====
 final int seed = int.parse(rollNo.substring(rollNo.length - 2));
-final int t = seed ~/ 10; // tens digit
-final int u = seed % 10; // units digit
+final int t = seed ~/ 10;
+final int u = seed % 10;
 
 const List<String> courses = [
-  'Mobile Dev', 'Data Structures', 'Operating Systems', 'Databases',
-  'Networks', 'Software Eng', 'AI', 'Web Engineering', 'Graphics', 'Security',
+  'Mobile Dev',
+  'Data Structures',
+  'Operating Systems',
+  'Databases',
+  'Networks',
+  'Software Eng',
+  'AI',
+  'Web Engineering',
+  'Graphics',
+  'Security',
 ];
 
-final String course = courses[u]; // your course name
-final int startCount = 3 + u; // where the tally starts
-final int stepSize = 1 + t % 4; // how much + and - change the tally
-final int maxCount = 20 + 2 * t; // the tally may never go above this
-final int startSeconds = 5 + (t + u) % 6; // where the countdown starts
-final int bugStep = 1 + u % 4; // used by BuggyCounter in Step 7
-// ===========================================================================
+final String course = courses[u];
+final int startCount = 3 + u;
+final int stepSize = 1 + t % 4;
+final int maxCount = 20 + 2 * t;
+final int startSeconds = 5 + (t + u) % 6;
+final int bugStep = 1 + u % 4;
 
-// Step 9 writes to this list from initState and dispose.
 final List<String> lifecycleLog = <String>[];
 
 void main() => runApp(const LabApp());
 
-// Keep the name LabApp and its const constructor: the checker uses them.
+// Stateless
 class LabApp extends StatelessWidget {
   const LabApp({super.key});
 
@@ -42,26 +48,58 @@ class LabApp extends StatelessWidget {
   }
 }
 
+// Stateless
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // runApp only ever receives the single root widget (LabApp).
-    // MaterialApp.home is the first screen to show inside that app.
+    // Think: runApp receives LabApp, while MaterialApp receives HomePage as home.
+    // Think: LabApp -> MaterialApp -> HomePage -> Scaffold ->
+    // SingleChildScrollView -> Column -> Row -> Text('Max: ..').
+
     return Scaffold(
-      appBar: AppBar(title: Text('Study Tracker: $course')),
-      body: StudentCard(name: studentName, roll: rollNo, course: course),
+      appBar: AppBar(
+        title: Text('Study Tracker: $course'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            StudentCard(
+              name: studentName,
+              roll: rollNo,
+              course: course,
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Start: $startCount',
+                  key: const Key('info-start'),
+                ),
+                Text(
+                  'Step: $stepSize',
+                  key: const Key('info-step'),
+                ),
+                Text(
+                  'Max: $maxCount',
+                  key: const Key('info-max'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
-// Think: StatelessWidget fields must be final because the widget's whole
-// job is to describe a fixed picture from the values it was given. If a
-// field could change after the object was created, Flutter wouldn't know
-// when to rebuild, since nothing tells it the value moved. Removing
-// `final` here would still compile on its own, but once this class is
-// used as `const StudentCard(...)`, the compiler requires every field to
-// be final — a const object must never change after it is built.
+
+// Stateless
+// Think: StatelessWidget fields are final because their configuration
+// should not change after the widget is created.
 class StudentCard extends StatelessWidget {
   final String name;
   final String roll;
@@ -82,9 +120,18 @@ class StudentCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Name: $name', key: const Key('student-name')),
-            Text('Roll no: $roll', key: const Key('student-roll')),
-            Text('Course: $course', key: const Key('student-course')),
+            Text(
+              'Name: $name',
+              key: const Key('student-name'),
+            ),
+            Text(
+              'Roll no: $roll',
+              key: const Key('student-roll'),
+            ),
+            Text(
+              'Course: $course',
+              key: const Key('student-course'),
+            ),
           ],
         ),
       ),
@@ -92,7 +139,7 @@ class StudentCard extends StatelessWidget {
   }
 }
 
-// ---- Provided for Step 7. It has a bug on purpose. Do not rename anything.
+// Provided in the starter code for a later lab step.
 class BuggyCounter extends StatefulWidget {
   const BuggyCounter({super.key});
 
@@ -107,7 +154,10 @@ class _BuggyCounterState extends State<BuggyCounter> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text('Bug clicks: $_clicks', key: const Key('bug-text')),
+        Text(
+          'Bug clicks: $_clicks',
+          key: const Key('bug-text'),
+        ),
         const SizedBox(width: 12),
         ElevatedButton(
           key: const Key('bug-button'),

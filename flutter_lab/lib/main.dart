@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 const String studentName = 'MUQADAS';
@@ -36,7 +38,10 @@ class LabApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(title: 'Study Tracker', home: HomePage());
+    return const MaterialApp(
+      title: 'Study Tracker',
+      home: HomePage(),
+    );
   }
 }
 
@@ -52,18 +57,33 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StudentCard(name: studentName, roll: rollNo, course: course),
+            StudentCard(
+              name: studentName,
+              roll: rollNo,
+              course: course,
+            ),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Start: $startCount', key: const Key('info-start')),
-                Text('Step: $stepSize', key: const Key('info-step')),
-                Text('Max: $maxCount', key: const Key('info-max')),
+                Text(
+                  'Start: $startCount',
+                  key: const Key('info-start'),
+                ),
+                Text(
+                  'Step: $stepSize',
+                  key: const Key('info-step'),
+                ),
+                Text(
+                  'Max: $maxCount',
+                  key: const Key('info-max'),
+                ),
               ],
             ),
             const SizedBox(height: 12),
             const Tally(),
+            const SizedBox(height: 12),
+            const Countdown(),
             const SizedBox(height: 12),
             const BuggyCounter(),
           ],
@@ -93,9 +113,18 @@ class StudentCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Name: $name', key: const Key('student-name')),
-            Text('Roll no: $roll', key: const Key('student-roll')),
-            Text('Course: $course', key: const Key('student-course')),
+            Text(
+              'Name: $name',
+              key: const Key('student-name'),
+            ),
+            Text(
+              'Roll no: $roll',
+              key: const Key('student-roll'),
+            ),
+            Text(
+              'Course: $course',
+              key: const Key('student-course'),
+            ),
           ],
         ),
       ),
@@ -107,7 +136,11 @@ class GoalBanner extends StatelessWidget {
   final int count;
   final int max;
 
-  const GoalBanner({super.key, required this.count, required this.max});
+  const GoalBanner({
+    super.key,
+    required this.count,
+    required this.max,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -133,14 +166,20 @@ class _TallyState extends State<Tally> {
   void _plus() {
     setState(() {
       _count += stepSize;
-      if (_count > maxCount) _count = maxCount;
+
+      if (_count > maxCount) {
+        _count = maxCount;
+      }
     });
   }
 
   void _minus() {
     setState(() {
       _count -= stepSize;
-      if (_count < 0) _count = 0;
+
+      if (_count < 0) {
+        _count = 0;
+      }
     });
   }
 
@@ -155,8 +194,14 @@ class _TallyState extends State<Tally> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Count: $_count', key: const Key('count')),
-        GoalBanner(count: _count, max: maxCount),
+        Text(
+          'Count: $_count',
+          key: const Key('count'),
+        ),
+        GoalBanner(
+          count: _count,
+          max: maxCount,
+        ),
         Row(
           children: [
             ElevatedButton(
@@ -183,6 +228,57 @@ class _TallyState extends State<Tally> {
   }
 }
 
+class Countdown extends StatefulWidget {
+  const Countdown({super.key});
+
+  @override
+  State<Countdown> createState() => _CountdownState();
+}
+
+class _CountdownState extends State<Countdown> {
+  late int _left;
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _left = startSeconds;
+
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        setState(() => _left--);
+
+        if (_left <= 0) {
+          timer.cancel();
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_left > 0) {
+      return Text(
+        'Time left: $_left s',
+        key: const Key('time-left'),
+      );
+    }
+
+    return const Text(
+      'Time is up!',
+      key: Key('time-left'),
+    );
+  }
+}
+
 class BuggyCounter extends StatefulWidget {
   const BuggyCounter({super.key});
 
@@ -197,7 +293,10 @@ class _BuggyCounterState extends State<BuggyCounter> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text('Bug clicks: $_clicks', key: const Key('bug-text')),
+        Text(
+          'Bug clicks: $_clicks',
+          key: const Key('bug-text'),
+        ),
         const SizedBox(width: 12),
         ElevatedButton(
           key: const Key('bug-button'),

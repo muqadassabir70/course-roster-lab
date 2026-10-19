@@ -1,11 +1,8 @@
-
-
 import 'package:flutter/material.dart';
 
 const String studentName = 'MUQADAS';
 const String rollNo = '04072313021';
 
-// ===== Seeded settings (generated from YOUR roll number). Do not edit. =====
 final int seed = int.parse(rollNo.substring(rollNo.length - 2));
 final int t = seed ~/ 10;
 final int u = seed % 10;
@@ -34,7 +31,6 @@ final List<String> lifecycleLog = <String>[];
 
 void main() => runApp(const LabApp());
 
-// Stateless
 class LabApp extends StatelessWidget {
   const LabApp({super.key});
 
@@ -44,16 +40,11 @@ class LabApp extends StatelessWidget {
   }
 }
 
-// Stateless
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Think: runApp receives LabApp, while MaterialApp receives HomePage as home.
-    // Think: LabApp -> MaterialApp -> HomePage -> Scaffold ->
-    // SingleChildScrollView -> Column -> Row -> Text('Max: ..').
-
     return Scaffold(
       appBar: AppBar(title: Text('Study Tracker: $course')),
       body: SingleChildScrollView(
@@ -71,10 +62,8 @@ class HomePage extends StatelessWidget {
                 Text('Max: $maxCount', key: const Key('info-max')),
               ],
             ),
-
-            // STEP 4: Display the progress below the information row.
             const SizedBox(height: 12),
-            GoalBanner(count: startCount, max: maxCount),
+            const Tally(),
           ],
         ),
       ),
@@ -82,9 +71,6 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// Stateless
-// Think: StatelessWidget fields are final because their configuration
-// should not change after the widget is created.
 class StudentCard extends StatelessWidget {
   final String name;
   final String roll;
@@ -115,11 +101,6 @@ class StudentCard extends StatelessWidget {
   }
 }
 
-// STEP 4: GoalBanner
-// Stateless
-// It receives count and max and calculates the progress without storing changing state.
-// Think: GoalBanner does not need setState because it does not own changing
-// state. To show a new count, its parent would rebuild it with a new count.
 class GoalBanner extends StatelessWidget {
   final int count;
   final int max;
@@ -137,7 +118,43 @@ class GoalBanner extends StatelessWidget {
   }
 }
 
-// Provided in the starter code for a later lab step.
+class Tally extends StatefulWidget {
+  const Tally({super.key});
+
+  @override
+  State<Tally> createState() => _TallyState();
+}
+
+class _TallyState extends State<Tally> {
+  int _count = startCount;
+
+  void _plus() {
+    setState(() {
+      _count += stepSize;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Count: $_count', key: const Key('count')),
+        GoalBanner(count: _count, max: maxCount),
+        Row(
+          children: [
+            ElevatedButton(
+              key: const Key('plus'),
+              onPressed: _plus,
+              child: Text('+$stepSize'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 class BuggyCounter extends StatefulWidget {
   const BuggyCounter({super.key});
 

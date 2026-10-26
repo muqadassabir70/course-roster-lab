@@ -1,14 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 const String studentName = 'Muqadas Sabir';
 const String rollNo = '04072313021';
-
 final int seed = int.parse(rollNo.substring(rollNo.length - 2));
 final int t = seed ~/ 10;
 final int u = seed % 10;
-
 const List<String> courses = [
   'Mobile Dev',
   'Data Structures',
@@ -34,7 +31,6 @@ const List<String> mains = [
 ];
 
 const List<String> crosses = ['start', 'center', 'end'];
-
 const List<String> hues = ['teal', 'indigo', 'orange', 'pink', 'green'];
 
 const Map<String, MaterialColor> swatches = {
@@ -107,6 +103,12 @@ class HomePage extends StatelessWidget {
             const Clock(),
             const SizedBox(height: 12),
             const SwapBoard(),
+            const SizedBox(height: 12),
+            const InfoPanel(),
+            const SizedBox(height: 12),
+            const FlexDemo(),
+            const SizedBox(height: 12),
+            const SummaryRow(),
           ],
         ),
       ),
@@ -122,9 +124,11 @@ class SettingsCard extends StatelessWidget {
     return Text(
       'YOUR SETTINGS (seed $seed)\n'
       'clock: start $startSec, tick $tick, stop at $stopAt\n'
-      'tiles: $tileA, $tileB, $tileC (taps for the Step 5 experiment: $tapsToMake)\n'
+      'tiles: $tileA, $tileB, $tileC '
+      '(taps for the Step 5 experiment: $tapsToMake)\n'
       'row main axis: $mainName | column cross axis: $crossName\n'
-      'flex: $flexA and $flexB | fixed width: ${fixedW.toStringAsFixed(0)}\n'
+      'flex: $flexA and $flexB | '
+      'fixed width: ${fixedW.toStringAsFixed(0)}\n'
       'box: margin $boxMargin, padding $boxPad, radius $boxRadius, '
       'border $boxBorder, colour $hue\n'
       'stamp: top $dotTop, right $dotRight, bottom $dotBottom, left $dotLeft',
@@ -149,17 +153,10 @@ class _ClockState extends State<Clock> {
   @override
   void initState() {
     super.initState();
-    lifecycleLog.add('Clock initState');
+    lifecycleLog.add('initState');
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_seconds >= stopAt) {
-        timer.cancel();
-        return;
-      }
-
-      setState(() {
-        _seconds += tick;
-      });
+      setState(() => _seconds += tick);
 
       if (_seconds >= stopAt) {
         timer.cancel();
@@ -170,7 +167,7 @@ class _ClockState extends State<Clock> {
   @override
   void dispose() {
     _timer.cancel();
-    lifecycleLog.add('Clock dispose');
+    lifecycleLog.add('dispose');
     super.dispose();
   }
 
@@ -196,8 +193,7 @@ class Probe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool above =
-        context.findAncestorWidgetOfExactType<Scaffold>() != null;
+    final above = context.findAncestorWidgetOfExactType<Scaffold>() != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,11 +243,7 @@ class _TileState extends State<Tile> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          taps++;
-        });
-      },
+      onPressed: () => setState(() => taps++),
       child: Text('${widget.label}: $taps'),
     );
   }
@@ -289,6 +281,137 @@ class _SwapBoardState extends State<SwapBoard> {
   }
 }
 
+class InfoPanel extends StatelessWidget {
+  const InfoPanel({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          key: const Key('info-row'),
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Start: $startSec s', key: const Key('row-a')),
+            Text('Tick: $tick s', key: const Key('row-b')),
+            Text('Stop: $stopAt s', key: const Key('row-c')),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Column(
+          key: const Key('info-col'),
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text('Name: $studentName', key: const Key('col-a')),
+            Text('Roll no: $rollNo', key: const Key('col-b')),
+            Text('Course: $course', key: const Key('col-c')),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class FlexDemo extends StatelessWidget {
+  const FlexDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = swatches[hue]!;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Step 8: Fixed Width, Expanded and Flexible',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        const Text('Fixed width + Expanded (flex ratio)'),
+        const SizedBox(height: 6),
+        SizedBox(
+          height: 64,
+          child: Row(
+            children: [
+              Container(
+                key: const Key('fixed-box'),
+                width: fixedW,
+                alignment: Alignment.center,
+                color: Colors.blueGrey,
+                child: Text(
+                  '${fixedW.toInt()} px',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              Expanded(
+                key: const Key('expanded-a'),
+                flex: flexA,
+                child: Container(
+                  alignment: Alignment.center,
+                  color: color,
+                  child: Text(
+                    'Expanded $flexA',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              Expanded(
+                key: const Key('expanded-b'),
+                flex: flexB,
+                child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.blue,
+                  child: Text(
+                    'Expanded $flexB',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        const Text('Flexible + Expanded'),
+        const SizedBox(height: 6),
+        SizedBox(
+          height: 64,
+          child: Row(
+            children: [
+              Flexible(
+                key: const Key('flexible-box'),
+                flex: flexA,
+                fit: FlexFit.loose,
+                child: Container(
+                  width: 100,
+                  height: 48,
+                  alignment: Alignment.center,
+                  color: Colors.orange,
+                  child: const Text('Flexible', textAlign: TextAlign.center),
+                ),
+              ),
+              Expanded(
+                key: const Key('flexible-expanded'),
+                flex: flexB,
+                child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.teal,
+                  child: const Text(
+                    'Expanded',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class SummaryRow extends StatelessWidget {
   const SummaryRow({super.key});
 
@@ -296,17 +419,23 @@ class SummaryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          'Part A: read the widget tree of the $course board from top to bottom.',
-          key: const Key('sum-a'),
+        Expanded(
+          child: Text(
+            'Part A: read the widget tree of the $course board from top to bottom.',
+            key: const Key('sum-a'),
+          ),
         ),
-        Text(
-          'Part B: build each box from small widgets and never extend a built-in class.',
-          key: const Key('sum-b'),
+        Expanded(
+          child: Text(
+            'Part B: build each box from small widgets and never extend a built-in class.',
+            key: const Key('sum-b'),
+          ),
         ),
-        Text(
-          'Part C: break the layout on purpose, then fix it with Expanded or Wrap.',
-          key: const Key('sum-c'),
+        Expanded(
+          child: Text(
+            'Part C: break the layout on purpose, then fix it with Expanded or Wrap.',
+            key: const Key('sum-c'),
+          ),
         ),
       ],
     );

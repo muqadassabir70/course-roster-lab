@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+
 const String studentName = 'Muqadas Sabir';
 const String rollNo = '04072313021';
 final int seed = int.parse(rollNo.substring(rollNo.length - 2));
@@ -80,10 +81,7 @@ class LabApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Team Board',
-      home: HomePage(),
-    );
+    return const MaterialApp(title: 'Team Board', home: HomePage());
   }
 }
 
@@ -112,6 +110,7 @@ class HomePage extends StatelessWidget {
             const FlexDemo(),
             const SizedBox(height: 12),
             const SummaryRow(),
+            const InfoBox(),
           ],
         ),
       ),
@@ -136,10 +135,7 @@ class SettingsCard extends StatelessWidget {
       'border $boxBorder, colour $hue\n'
       'stamp: top $dotTop, right $dotRight, bottom $dotBottom, left $dotLeft',
       key: const Key('settings'),
-      style: const TextStyle(
-        fontFamily: 'monospace',
-        fontSize: 12,
-      ),
+      style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
     );
   }
 }
@@ -199,8 +195,7 @@ class Probe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final above =
-        context.findAncestorWidgetOfExactType<Scaffold>() != null;
+    final above = context.findAncestorWidgetOfExactType<Scaffold>() != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,10 +213,7 @@ class Probe extends StatelessWidget {
           'Context belongs to: ${context.widget.runtimeType}',
           key: const Key('probe-context'),
         ),
-        Text(
-          'Scaffold above me: $above',
-          key: const Key('probe-above'),
-        ),
+        Text('Scaffold above me: $above', key: const Key('probe-above')),
       ],
     );
   }
@@ -233,10 +225,7 @@ class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        'Welcome, $studentName',
-        key: const Key('welcome'),
-      ),
+      child: Text('Welcome, $studentName', key: const Key('welcome')),
     );
   }
 }
@@ -338,10 +327,7 @@ class FlexDemo extends StatelessWidget {
       children: [
         const Text(
           'Step 8: Fixed Width, Expanded and Flexible',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         const Text('Fixed width + Expanded (flex ratio)'),
@@ -405,10 +391,7 @@ class FlexDemo extends StatelessWidget {
                   height: 48,
                   alignment: Alignment.center,
                   color: Colors.orange,
-                  child: const Text(
-                    'Flexible',
-                    textAlign: TextAlign.center,
-                  ),
+                  child: const Text('Flexible', textAlign: TextAlign.center),
                 ),
               ),
               Expanded(
@@ -457,6 +440,28 @@ class SummaryRow extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class InfoBox extends StatelessWidget {
+  const InfoBox({super.key});
+
+  @override
+  // Padding is inside the border, while margin is outside it.
+// Padding or SizedBox is better when only spacing is needed.
+// Container is useful when spacing, decoration, color, or border is needed.
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('info-box'),
+      margin: EdgeInsets.all(boxMargin),
+      padding: EdgeInsets.all(boxPad),
+      decoration: BoxDecoration(
+        color: swatches[hue]!.shade100,
+        borderRadius: BorderRadius.circular(boxRadius),
+        border: Border.all(width: boxBorder),
+      ),
+      child: Text('Course: $course', key: const Key('box-text')),
     );
   }
 }

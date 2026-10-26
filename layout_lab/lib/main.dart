@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 
 const String studentName = 'Muqadas Sabir';
 const String rollNo = '04072313021';
+
 final int seed = int.parse(rollNo.substring(rollNo.length - 2));
 final int t = seed ~/ 10;
 final int u = seed % 10;
+
 const List<String> courses = [
   'Mobile Dev',
   'Data Structures',
@@ -107,10 +109,13 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 12),
             const InfoPanel(),
             const SizedBox(height: 12),
-            const FlexDemo(),
-            const SizedBox(height: 12),
             const SummaryRow(),
+            const SizedBox(height: 12),
+            const ShareRow(),
+            const SizedBox(height: 12),
             const InfoBox(),
+            const SizedBox(height: 12),
+            const StampStack(),
           ],
         ),
       ),
@@ -133,7 +138,8 @@ class SettingsCard extends StatelessWidget {
       'fixed width: ${fixedW.toStringAsFixed(0)}\n'
       'box: margin $boxMargin, padding $boxPad, radius $boxRadius, '
       'border $boxBorder, colour $hue\n'
-      'stamp: top $dotTop, right $dotRight, bottom $dotBottom, left $dotLeft',
+      'stamp: top $dotTop, right $dotRight, '
+      'bottom $dotBottom, left $dotLeft',
       key: const Key('settings'),
       style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
     );
@@ -177,6 +183,9 @@ class _ClockState extends State<Clock> {
   Widget build(BuildContext context) {
     _builds++;
 
+    // Starting a Timer in build would create extra timers on rebuilds.
+    // Builds increases once per timer tick; dispose cancels the Timer.
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -196,6 +205,9 @@ class Probe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final above = context.findAncestorWidgetOfExactType<Scaffold>() != null;
+
+    // Widget changes on rebuild; the Element stays and keeps its State.
+    // The RenderObject handles layout, painting and hit testing.
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,6 +263,9 @@ class _TileState extends State<Tile> {
   }
 }
 
+// Composition builds a widget from another widget instead of subclassing
+// ElevatedButton.
+
 class SwapBoard extends StatefulWidget {
   const SwapBoard({super.key});
 
@@ -282,6 +297,8 @@ class _SwapBoardState extends State<SwapBoard> {
     );
   }
 }
+
+// Without keys, Elements can remain matched by position and keep their State.
 
 class InfoPanel extends StatelessWidget {
   const InfoPanel({super.key});
@@ -315,104 +332,7 @@ class InfoPanel extends StatelessWidget {
   }
 }
 
-class FlexDemo extends StatelessWidget {
-  const FlexDemo({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final color = swatches[hue]!;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Step 8: Fixed Width, Expanded and Flexible',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        const Text('Fixed width + Expanded (flex ratio)'),
-        const SizedBox(height: 6),
-        SizedBox(
-          height: 64,
-          child: Row(
-            children: [
-              Container(
-                key: const Key('fixed-box'),
-                width: fixedW,
-                alignment: Alignment.center,
-                color: Colors.blueGrey,
-                child: Text(
-                  '${fixedW.toInt()} px',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-              Expanded(
-                key: const Key('expanded-a'),
-                flex: flexA,
-                child: Container(
-                  alignment: Alignment.center,
-                  color: color,
-                  child: Text(
-                    'Expanded $flexA',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-              Expanded(
-                key: const Key('expanded-b'),
-                flex: flexB,
-                child: Container(
-                  alignment: Alignment.center,
-                  color: Colors.blue,
-                  child: Text(
-                    'Expanded $flexB',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
-        const Text('Flexible + Expanded'),
-        const SizedBox(height: 6),
-        SizedBox(
-          height: 64,
-          child: Row(
-            children: [
-              Flexible(
-                key: const Key('flexible-box'),
-                flex: flexA,
-                fit: FlexFit.loose,
-                child: Container(
-                  width: 100,
-                  height: 48,
-                  alignment: Alignment.center,
-                  color: Colors.orange,
-                  child: const Text('Flexible', textAlign: TextAlign.center),
-                ),
-              ),
-              Expanded(
-                key: const Key('flexible-expanded'),
-                flex: flexB,
-                child: Container(
-                  alignment: Alignment.center,
-                  color: Colors.teal,
-                  child: const Text(
-                    'Expanded',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
+// A Column's main axis is vertical; its cross axis is horizontal.
 
 class SummaryRow extends StatelessWidget {
   const SummaryRow({super.key});
@@ -444,13 +364,49 @@ class SummaryRow extends StatelessWidget {
   }
 }
 
+// Expanded gives each Text a share of the width, allowing words to wrap.
+// Constraints go down the tree and sizes go back up.
+
+class ShareRow extends StatelessWidget {
+  const ShareRow({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      key: const Key('share-row'),
+      children: [
+        SizedBox(
+          key: const Key('fixed'),
+          width: fixedW,
+          child: ElevatedButton(onPressed: () {}, child: const Text('F')),
+        ),
+        Expanded(
+          flex: flexA,
+          child: ElevatedButton(
+            key: const Key('exp'),
+            onPressed: () {},
+            child: const Text('Exp'),
+          ),
+        ),
+        Flexible(
+          flex: flexB,
+          child: ElevatedButton(
+            key: const Key('flex'),
+            onPressed: () {},
+            child: const Text('Flex'),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Expanded uses tight fit; Flexible uses loose fit by default.
+
 class InfoBox extends StatelessWidget {
   const InfoBox({super.key});
 
   @override
-  // Padding is inside the border, while margin is outside it.
-// Padding or SizedBox is better when only spacing is needed.
-// Container is useful when spacing, decoration, color, or border is needed.
   Widget build(BuildContext context) {
     return Container(
       key: const Key('info-box'),
@@ -465,3 +421,38 @@ class InfoBox extends StatelessWidget {
     );
   }
 }
+
+// Padding is inside the border; margin is outside it.
+// Padding or SizedBox is enough for simple spacing.
+
+class StampStack extends StatelessWidget {
+  const StampStack({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      key: const Key('stack'),
+      children: [
+        Container(
+          key: const Key('layer-base'),
+          width: 300,
+          height: 120,
+          color: Colors.grey.shade300,
+        ),
+        Positioned(
+          top: dotTop,
+          right: dotRight,
+          child: const Icon(Icons.star, key: Key('dot-top')),
+        ),
+        Positioned(
+          bottom: dotBottom,
+          left: dotLeft,
+          child: const Icon(Icons.circle, key: Key('dot-bottom')),
+        ),
+      ],
+    );
+  }
+}
+
+// The non-positioned Container determines the Stack's size.
+// If it were last, it could paint over the icons.

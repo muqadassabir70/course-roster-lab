@@ -1,3 +1,4 @@
+// main.dart - Team Board lab
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -7,8 +8,8 @@ const String rollNo = '04072313021';
 
 // ===== Seeded settings (generated from YOUR roll number). Do not edit. =====
 final int seed = int.parse(rollNo.substring(rollNo.length - 2));
-final int t = seed ~/ 10;
-final int u = seed % 10;
+final int t = seed ~/ 10; // tens digit
+final int u = seed % 10; // units digit
 
 const List<String> courses = [
   'Mobile Dev',
@@ -35,6 +36,7 @@ const List<String> mains = [
 ];
 
 const List<String> crosses = ['start', 'center', 'end'];
+
 const List<String> hues = ['teal', 'indigo', 'orange', 'pink', 'green'];
 
 const Map<String, MaterialColor> swatches = {
@@ -80,13 +82,12 @@ final double dotTop = 4.0 + 4 * (t % 4);
 final double dotRight = 4.0 + 4 * (u % 4);
 final double dotBottom = 4.0 + 4 * ((t + u) % 4);
 final double dotLeft = 4.0 + 4 * ((t + 2 * u) % 4);
+// ===========================================================================
 
-// Step 2 writes to this list from initState and dispose.
 final List<String> lifecycleLog = <String>[];
 
 void main() => runApp(const LabApp());
 
-// Keep LabApp and its const constructor.
 class LabApp extends StatelessWidget {
   const LabApp({super.key});
 
@@ -118,7 +119,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// Step 1: Clock widget
+// Steps 1-3: clock, build count, and Probe
 class Clock extends StatefulWidget {
   const Clock({super.key});
 
@@ -163,12 +164,48 @@ class _ClockState extends State<Clock> {
       children: [
         Text('Session: $_seconds s', key: const Key('clock')),
         Text('Builds: $_builds', key: const Key('builds')),
+        Probe(seconds: _seconds),
       ],
     );
   }
 }
 
-// Provided: shows your seeded settings. Do not rename.
+// Step 3: inspect Widget, Element, and BuildContext
+class Probe extends StatelessWidget {
+  final int seconds;
+
+  const Probe({super.key, required this.seconds});
+
+  @override
+  Widget build(BuildContext context) {
+    final bool above =
+        context.findAncestorWidgetOfExactType<Scaffold>() != null;
+
+    // Widgets are recreated cheaply; Elements manage their place in the tree.
+    // RenderObjects handle layout and painting.
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Seen at: $seconds s', key: const Key('probe-seen')),
+        Text(
+          'Widget #${identityHashCode(this)}',
+          key: const Key('probe-widget'),
+        ),
+        Text(
+          'Element #${identityHashCode(context)}',
+          key: const Key('probe-element'),
+        ),
+        Text(
+          'Context belongs to: ${context.widget.runtimeType}',
+          key: const Key('probe-context'),
+        ),
+        Text('Scaffold above me: $above', key: const Key('probe-above')),
+      ],
+    );
+  }
+}
+
+// Provided settings widget. Keep it on the page.
 class SettingsCard extends StatelessWidget {
   const SettingsCard({super.key});
 
@@ -177,8 +214,7 @@ class SettingsCard extends StatelessWidget {
     return Text(
       'YOUR SETTINGS (seed $seed)\n'
       'clock: start $startSec, tick $tick, stop at $stopAt\n'
-      'tiles: $tileA, $tileB, $tileC '
-      '(taps for the Step 5 experiment: $tapsToMake)\n'
+      'tiles: $tileA, $tileB, $tileC (taps for the Step 5 experiment: $tapsToMake)\n'
       'row main axis: $mainName | column cross axis: $crossName\n'
       'flex: $flexA and $flexB | fixed width: ${fixedW.toStringAsFixed(0)}\n'
       'box: margin $boxMargin, padding $boxPad, radius $boxRadius, '

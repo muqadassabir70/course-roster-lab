@@ -11,33 +11,15 @@ final int t = seed ~/ 10;
 final int u = seed % 10;
 
 const List<String> courses = [
-  'Mobile Dev',
-  'Data Structures',
-  'Operating Systems',
-  'Databases',
-  'Networks',
-  'Software Eng',
-  'AI',
-  'Web Engineering',
-  'Graphics',
-  'Security',
+  'Mobile Dev', 'Data Structures', 'Operating Systems', 'Databases',
+  'Networks', 'Software Eng', 'AI', 'Web Engineering', 'Graphics', 'Security',
 ];
-
 const List<String> names = ['Ali', 'Sara', 'Omar', 'Hina', 'Zain', 'Maya'];
-
 const List<String> mains = [
-  'start',
-  'center',
-  'end',
-  'spaceBetween',
-  'spaceAround',
-  'spaceEvenly',
+  'start', 'center', 'end', 'spaceBetween', 'spaceAround', 'spaceEvenly',
 ];
-
 const List<String> crosses = ['start', 'center', 'end'];
-
 const List<String> hues = ['teal', 'indigo', 'orange', 'pink', 'green'];
-
 const Map<String, MaterialColor> swatches = {
   'teal': Colors.teal,
   'indigo': Colors.indigo,
@@ -85,10 +67,7 @@ class LabApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Team Board',
-      home: HomePage(),
-    );
+    return const MaterialApp(title: 'Team Board', home: HomePage());
   }
 }
 
@@ -113,6 +92,8 @@ class HomePage extends StatelessWidget {
             const SwapBoard(),
             const SizedBox(height: 12),
             const InfoPanel(),
+            const SizedBox(height: 12),
+            const SummaryRow(),
           ],
         ),
       ),
@@ -159,7 +140,6 @@ class _ClockState extends State<Clock> {
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() => _seconds += tick);
-
       if (_seconds >= stopAt) {
         timer.cancel();
       }
@@ -201,22 +181,13 @@ class Probe extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Seen at: $seconds s', key: const Key('probe-seen')),
-        Text(
-          'Widget #${identityHashCode(this)}',
-          key: const Key('probe-widget'),
-        ),
-        Text(
-          'Element #${identityHashCode(context)}',
-          key: const Key('probe-element'),
-        ),
-        Text(
-          'Context belongs to: ${context.widget.runtimeType}',
-          key: const Key('probe-context'),
-        ),
-        Text(
-          'Scaffold above me: $above',
-          key: const Key('probe-above'),
-        ),
+        Text('Widget #${identityHashCode(this)}',
+            key: const Key('probe-widget')),
+        Text('Element #${identityHashCode(context)}',
+            key: const Key('probe-element')),
+        Text('Context belongs to: ${context.widget.runtimeType}',
+            key: const Key('probe-context')),
+        Text('Scaffold above me: $above', key: const Key('probe-above')),
       ],
     );
   }
@@ -228,10 +199,7 @@ class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        'Welcome, $studentName',
-        key: const Key('welcome'),
-      ),
+      child: Text('Welcome, $studentName', key: const Key('welcome')),
     );
   }
 }
@@ -299,9 +267,7 @@ class InfoPanel extends StatelessWidget {
       children: [
         Row(
           key: const Key('info-row'),
-          mainAxisAlignment: MainAxisAlignment.values.firstWhere(
-            (alignment) => alignment.name == mainName,
-          ),
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Start: $startSec s', key: const Key('row-a')),
             Text('Tick: $tick s', key: const Key('row-b')),
@@ -311,9 +277,7 @@ class InfoPanel extends StatelessWidget {
         const SizedBox(height: 12),
         Column(
           key: const Key('info-col'),
-          crossAxisAlignment: CrossAxisAlignment.values.firstWhere(
-            (alignment) => alignment.name == crossName,
-          ),
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text('Name: $studentName', key: const Key('col-a')),
             Text('Roll no: $rollNo', key: const Key('col-b')),
